@@ -5,11 +5,23 @@ import CssBaseline from '@mui/material/CssBaseline'
 import theme from './theme'
 import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles'
 
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
+//MUI dialog
+import { ConfirmProvider } from 'material-ui-confirm'
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <CssVarsProvider theme={theme}>
-      <CssBaseline />
-      <App />
+      <ConfirmProvider defaultOptions={{
+        allowClose: false,
+        dialogProps: { maxWidth: 'xs' }
+      }}>
+        <CssBaseline />
+        <App />
+        <ToastContainer autoClose={2500}/>
+      </ConfirmProvider>
     </CssVarsProvider>
   </React.StrictMode>
 )
