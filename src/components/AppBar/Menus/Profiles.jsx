@@ -22,54 +22,55 @@ function Profiles() {
   }
   return (
     <Box>
-      <Tooltip title="Account settings">
-        <IconButton
-          onClick={handleClick}
-          size="small"
-          sx={{ padding: 0 }}
-          aria-controls={open ? 'account-menu' : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? 'true' : undefined}
+      <Box>
+        <Tooltip title="Account settings">
+          <IconButton
+            onClick={handleClick}
+            size="small"
+            sx={{ padding: 0 }}
+            aria-controls={open ? 'account-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+          >
+            <Avatar sx={{ width: 36, height: 36 }} />
+          </IconButton>
+        </Tooltip>
+        <Menu
+          id="basic-menu-Profiles"
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          MenuListProps={{
+            'aria-labelledby': 'basic-button'
+          }}
         >
-          <Avatar sx={{ width: 36, height: 36 }} />
-        </IconButton>
-      </Tooltip>
-
-      <Menu
-        id="basic-menu-Profiles"
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button'
-        }}
-      >
-        <MenuItem onClick={handleClose}>
-          <Avatar sx={{ width: 28, height: 28, mr: 2 }}/> Profile
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar sx={{ width: 28, height: 28, mr: 2 }}/> My account
-        </MenuItem>
-        <Divider />
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
+          <MenuItem onClick={handleClose}>
+            <Avatar sx={{ width: 28, height: 28, mr: 2 }}/> Profile
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <Avatar sx={{ width: 28, height: 28, mr: 2 }}/> My account
+          </MenuItem>
+          <Divider />
+          <MenuItem onClick={handleClose}>
+            <ListItemIcon>
+              <PersonAdd fontSize="small" />
+            </ListItemIcon>
           Add another account
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <Settings fontSize="small" />
-          </ListItemIcon>
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <ListItemIcon>
+              <Settings fontSize="small" />
+            </ListItemIcon>
           Settings
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>
-            <Logout fontSize="small" />
-          </ListItemIcon>
+          </MenuItem>
+          <MenuItem onClick={handleClose}>
+            <ListItemIcon>
+              <Logout fontSize="small" />
+            </ListItemIcon>
           Logout
-        </MenuItem>
-      </Menu>
+          </MenuItem>
+        </Menu>
+      </Box>
     </Box>
   )
 }
