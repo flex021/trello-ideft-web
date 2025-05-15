@@ -47,14 +47,6 @@ function AppBar() {
           <Templates />
         </Box>
 
-        <Button
-          sx={{
-            color: 'white',
-            border: 'none',
-            '&:hover': { border: 'none' }
-          }}
-          variant="outlined"
-          startIcon={<LibraryAddIcon />}>Create</Button>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <AutoCompleteSearchBoard />
