@@ -5,12 +5,10 @@ import VpnLockIcon from '@mui/icons-material/VpnLock'
 import AddToDriveIcon from '@mui/icons-material/AddToDrive'
 import FilterListIcon from '@mui/icons-material/FilterList'
 import BoltIcon from '@mui/icons-material/Bolt'
-import Avatar from '@mui/material/Avatar'
-import AvatarGroup from '@mui/material/AvatarGroup'
 import { Tooltip } from '@mui/material'
-import Button from '@mui/material/Button'
-import PersonAddIcon from '@mui/icons-material/PersonAdd'
 import { capitalizeFirstLetter } from '~/utils/formatters'
+import BoardUserGroup from './BoardUserGroup'
+import InviteBoardUser from './InviteBoardUser'
 
 function BoardBar({ board }) {
 
@@ -66,45 +64,8 @@ function BoardBar({ board }) {
           onClick={() => {}}/>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <Button
-          variant="outlined"
-          startIcon={<PersonAddIcon />}
-          sx={{
-            color: 'white',
-            borderColor: 'white',
-            '&:hover': { borderColor: 'white' }
-          }}
-        >Invite</Button>
-        <AvatarGroup
-          sx={{
-            gap: '10px',
-            '& .MuiAvatar-root':{
-              width: 34,
-              height: 34,
-              fontSize: 16,
-              border: 'none',
-              color: 'white',
-              cursor: 'pointer',
-              '&:first-of-type': { bgcolor: '#a4b0be' }
-            }
-          }}
-          max={4}>
-          <Tooltip title="TomDev">
-            <Avatar alt="Remy Sharp" src="https://picsum.photos/200/300" />
-          </Tooltip>
-          <Tooltip title="TomDev">
-            <Avatar alt="Travis Howard" src="https://picsum.photos/200/300" />
-          </Tooltip>
-          <Tooltip title="TomDev">
-            <Avatar alt="Cindy Baker" src="https://picsum.photos/200/300" />
-          </Tooltip>
-          <Tooltip title="TomDev">
-            <Avatar alt="Agnes Walker" src="https://picsum.photos/200/300" />
-          </Tooltip>
-          <Tooltip title="TomDev">
-            <Avatar alt="Trevor Henderson" src="https://picsum.photos/200/300" />
-          </Tooltip>
-        </AvatarGroup>
+        <InviteBoardUser boardId={board._id}/>
+        <BoardUserGroup boardUsers={board?.FE_allUsers}/>
       </Box>
     </Box>
   )

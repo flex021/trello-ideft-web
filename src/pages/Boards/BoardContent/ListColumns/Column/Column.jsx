@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { toast } from 'react-toastify'
 import Menu from '@mui/material/Menu'
@@ -19,15 +18,31 @@ import { CSS } from '@dnd-kit/utilities'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
 import { useConfirm } from 'material-ui-confirm'
+import {
+  createNewCardAPI,
+  updateColumnDetailsAPI
+} from '~/apis/index.js'
+import { cloneDeep } from 'lodash'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  updateCurrentActiveBoard,
+  selectCurrentActiveBoard
+} from '~/redux/activeBoard/activeBoardSlice.js'
+import {
+  deleteColumnDetailsAPI
+} from '~/apis/index.js'
+import ToggleFocusInput from '~/components/Form/ToggleFocusInput'
 
 
-function Column({ column, createNewCard, deleteColumnDetails }) {
+function Column({ column }) {
+  const dispatch = useDispatch()
+  const board = useSelector(selectCurrentActiveBoard)
 
   const [openNewCardForm, setOpenNewCardForm] = useState(false)
   const toggleOpenNewCardForm = () => setOpenNewCardForm(!openNewCardForm)
   const [newCardTitle, setNewCardTitle] = useState('')
 
-  const addNewCard = () => {
+  const addNewCard = async () => {
     if (!newCardTitle) {
       toast.error('Please enter Card Title!', { position: 'top-left' } )
       return
@@ -38,7 +53,23 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
       columnId: column._id
     }
 
-    createNewCard(newCardData)
+    const createCard = await createNewCardAPI({
+      ...newCardData,
+      boardId: board._id
+    })
+    const newBoard = cloneDeep(board)
+    const columnToUpdate = newBoard.columns.find(column => column._id === createCard.columnId)
+    if ( columnToUpdate ) {
+      if (columnToUpdate.cards.some(card => card.FE_PlaceholderCard)) {
+        columnToUpdate.cards= [createCard]
+        columnToUpdate.cardOrderIds = [createCard._id]
+      } else {
+        columnToUpdate.cards.push(createCard)
+        columnToUpdate.cardOrderIds.push(createCard._id)
+      }
+    }
+
+    dispatch(updateCurrentActiveBoard(newBoard))
 
     toggleOpenNewCardForm()
     setNewCardTitle('')
@@ -72,13 +103,28 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
   const handleDeleteColumn = () => {
     confirmDeleteColumn({
       title: 'Delete Column?',
-      description: 'Type "agree" to confirm your action!',
-      // confirmationKeyword: 'agree',
+      description: 'Are you sure you want to delete this Column?',
       confirmationText: 'Confirm',
       cancellationText: 'Cancel'
     }).then(() => {
-      deleteColumnDetails(column._id)
+      const newBoard = cloneDeep(board)
+      newBoard.columns = newBoard.columns.filter(c => c._id !== column._id)
+      newBoard.columnOrderIds = newBoard.columnOrderIds.filter(_id => _id !== column._id)
+      dispatch(updateCurrentActiveBoard(newBoard))
+      deleteColumnDetailsAPI(column._id).then(res => {
+        toast.success(res?.deleteResult)
+      })
     }).catch(() => {})
+  }
+
+  const onUpdateColumnTitle = (newTitle) => {
+    updateColumnDetailsAPI(column._id, { title: newTitle }).then(() => {
+      const newBoard = cloneDeep(board)
+      const columnToUpdate = newBoard.columns.find(c => c._id === column._id)
+      if ( columnToUpdate ) columnToUpdate.title = newTitle
+      dispatch(updateCurrentActiveBoard(newBoard))
+    })
+
   }
 
   return (
@@ -107,11 +153,11 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
           alignItems: 'center',
           justifyContent: 'space-between'
         }}>
-          <Typography variant='h6' sx={{
-            fontSize: '1rem',
-            fontWeight: 'bold',
-            cursor: 'pointer'
-          }}>{column?.title}</Typography>
+          <ToggleFocusInput
+            value={column?.title}
+            onChangedValue={onUpdateColumnTitle}
+            data-no-dnd="true"
+          />
           <Box>
             <Tooltip title='More options'>
               <MoreHorizIcon
@@ -217,6 +263,7 @@ function Column({ column, createNewCard, deleteColumnDetails }) {
               />
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <Button
+                  className="interceptor-loading"
                   onClick={addNewCard}
                   variant='contained'
                   data-no-dnd="true"

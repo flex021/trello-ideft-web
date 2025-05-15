@@ -7,13 +7,26 @@ import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortabl
 import { useState } from 'react'
 import TextField from '@mui/material/TextField'
 import CloseIcon from '@mui/icons-material/Close'
+import {
+  createNewColumnAPI
+} from '~/apis/index.js'
+import { generatePlaceholderCard } from '~/utils/formatters.js'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  updateCurrentActiveBoard,
+  selectCurrentActiveBoard
+} from '~/redux/activeBoard/activeBoardSlice.js'
+import { cloneDeep } from 'lodash'
 
-function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDetails }) {
+function ListColumns({ columns }) {
+  const dispatch = useDispatch()
+  const board = useSelector(selectCurrentActiveBoard)
+
   const [openNewColumnForm, setOpenNewColumnForm] = useState(false)
   const toggleOpenNewColumnForm = () => setOpenNewColumnForm(!openNewColumnForm)
   const [newColumnTitle, setNewColumnTitle] = useState('')
 
-  const addNewColumn = () => {
+  const addNewColumn = async () => {
     if (!newColumnTitle) {
       toast.error('Please enter Column Title!')
       return
@@ -23,7 +36,18 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
       title: newColumnTitle
     }
 
-    createNewColumn(newColumnData)
+    const createColumn = await createNewColumnAPI({
+      ...newColumnData,
+      boardId: board._id
+    })
+
+    createColumn.cards = [generatePlaceholderCard(createColumn)]
+    createColumn.cardOrderIds = [generatePlaceholderCard(createColumn)._id]
+
+    const newBoard = cloneDeep(board)
+    newBoard.columns.push(createColumn)
+    newBoard.columnOrderIds.push(createColumn._id)
+    dispatch(updateCurrentActiveBoard(newBoard))
 
     toggleOpenNewColumnForm()
     setNewColumnTitle('')
@@ -45,8 +69,6 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
           return <Column
             key={column._id}
             column={column}
-            createNewCard={createNewCard}
-            deleteColumnDetails = {deleteColumnDetails}
           />
 
         })}
@@ -108,6 +130,7 @@ function ListColumns({ columns, createNewColumn, createNewCard, deleteColumnDeta
             />
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Button
+                className="interceptor-loading"
                 onClick={addNewColumn}
                 variant='contained'
                 color='success'

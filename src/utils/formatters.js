@@ -4,15 +4,6 @@ export const capitalizeFirstLetter = (val) => {
 }
 
 
-// Bug khi column là rỗng
-/**
- * Phía FE sẽ tạo ra 1 cái card đặc biệt: Placeholder Card, không liên quan tới Back-end
- * Card đặc biệt này sẽ được ẩn ở giao diện UI người dùng
- * Cấu trúc Id của cái card này để Unique rất đơn giản, không cần phải làm random phức tạp:
- * "columnId_placeholder-card" (mỗi column chỉ có thể có tối đa một cái Placeholder Card)
- * Quan trọng khi tạo phải đầy đủ: {_id, boardId, columnId, FE_PlaceholderCard}
- */
-
 export const generatePlaceholderCard = (column) => {
   return {
     _id: `${column._id}-placeholder-card`,
@@ -21,3 +12,17 @@ export const generatePlaceholderCard = (column) => {
     FE_PlaceholderCard: true
   }
 }
+
+export const interceptorLoadingElements = (calling) => {
+  const elements = document.querySelectorAll('.interceptor-loading')
+  for (let i = 0; i < elements.length; i++) {
+    if (calling) {
+      elements[i].style.opacity = '0.5'
+      elements[i].style.pointerEvents = 'none'
+    } else {
+      elements[i].style.opacity = 'initial'
+      elements[i].style.pointerEvents = 'initial'
+    }
+  }
+}
+
