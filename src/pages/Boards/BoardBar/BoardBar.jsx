@@ -3,12 +3,16 @@ import Chip from '@mui/material/Chip'
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import VpnLockIcon from '@mui/icons-material/VpnLock'
 import AddToDriveIcon from '@mui/icons-material/AddToDrive'
-import FilterListIcon from '@mui/icons-material/FilterList'
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever'
 import BoltIcon from '@mui/icons-material/Bolt'
 import { Tooltip } from '@mui/material'
 import { capitalizeFirstLetter } from '~/utils/formatters'
 import BoardUserGroup from './BoardUserGroup'
 import InviteBoardUser from './InviteBoardUser'
+import { useConfirm } from 'material-ui-confirm'
+import { deleteBoardDetailsAPI } from '~/apis'
+import { toast } from 'react-toastify'
+import { useNavigate } from 'react-router-dom'
 
 function BoardBar({ board }) {
 
@@ -24,6 +28,24 @@ function BoardBar({ board }) {
     '&:hover': {
       bgcolor: 'primary.50'
     }
+  }
+
+  const navigate = useNavigate()
+
+  const confirmDeleteColumn = useConfirm()
+  const handleDeleteBoard = () => {
+    confirmDeleteColumn({
+      title: 'Are you sure you want to delete this Board?',
+      confirmationKeyword: 'deal',
+      description: 'Please type "deal" to delete this board',
+      confirmationText: 'Confirm',
+      cancellationText: 'Cancel'
+    }).then(() => {
+      deleteBoardDetailsAPI(board._id).then(res => {
+        toast.success(res?.deleteResult)
+        navigate('/boards')
+      })
+    }).catch(() => {})
   }
 
   return (
@@ -59,9 +81,9 @@ function BoardBar({ board }) {
           label="Automatin"
           onClick={() => {}}/>
         <Chip sx={MENU_STYLES}
-          icon={<FilterListIcon />}
-          label="Filters"
-          onClick={() => {}}/>
+          icon={<DeleteForeverIcon />}
+          label="Delete Board"
+          onClick={handleDeleteBoard}/>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         <InviteBoardUser boardId={board._id}/>

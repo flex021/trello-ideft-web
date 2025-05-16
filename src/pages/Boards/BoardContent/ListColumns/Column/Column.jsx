@@ -103,6 +103,7 @@ function Column({ column }) {
   const handleDeleteColumn = () => {
     confirmDeleteColumn({
       title: 'Delete Column?',
+      // confirmationKeyword: 'ok',
       description: 'Are you sure you want to delete this Column?',
       confirmationText: 'Confirm',
       cancellationText: 'Cancel'
