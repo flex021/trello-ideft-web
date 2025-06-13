@@ -2,6 +2,12 @@
   "redirects": [
     {
       "source": "/(.*)/",
+      "has": [
+        {
+          "type": "host",
+          "value": ".*"
+        }
+      ],
       "destination": "/$1",
       "permanent": true
     }
