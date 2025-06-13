@@ -28,6 +28,7 @@ function App() {
 
         {/**Board Details */}
         <Route path='/boards/:boardId' element={<Board />}/>
+        <Route path='/boards/:boardId/' element={<Board />} />
 
         {/**Boards */}
         <Route path='/boards' element={<Boards />}/>
