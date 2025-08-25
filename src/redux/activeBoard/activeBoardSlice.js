@@ -29,7 +29,6 @@ export const activeBoardSlice = createSlice({
     updateCardInBoard: (state, action) => {
       let incomingCard = action.payload
 
-      // tìm dần từ board > column > card
       const column = state.currentActiveBoard.columns.find(i => i._id === incomingCard.columnId)
       if (column) {
         const card = column.cards.find(i => i._id === incomingCard._id)
