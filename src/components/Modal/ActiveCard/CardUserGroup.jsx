@@ -21,7 +21,9 @@ function CardUserGroup({ cardMemberIds = [], onUpdateCardMembers }) {
 
   const board = useSelector(selectCurrentActiveBoard)
 
-  const FE_CardMembers_sort = cardMemberIds.map(id => board.FE_allUsers.find(u => u._id === id))
+  const FE_CardMembers_sort = cardMemberIds
+    .map(id => board.FE_allUsers.find(u => u._id === id))
+    .filter(user => user !== undefined && user !== null)
 
   const handleUpdateCardMembers = (user) => {
     const inComingMemberInfo = {
