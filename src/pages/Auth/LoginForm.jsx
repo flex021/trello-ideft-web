@@ -53,6 +53,12 @@ function LoginForm() {
           <Box sx={{ marginTop: '1em', display: 'flex', justifyContent: 'center', color: theme => theme.palette.grey[500] }}>
             Log in to Trello!
           </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', color: theme => theme.palette.grey[700] }}>
+            Hint: congthong2015@gmail.com
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'center', color: theme => theme.palette.grey[700] }}>
+            Pass: 12345678a
+          </Box>
           <Box sx={{ marginTop: '1em', display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: '0 1em' }}>
 
             {verifiedEmail && <Alert severity="success" sx={{ '.MuiAlert-message': { overflow: 'hidden' } }}>
